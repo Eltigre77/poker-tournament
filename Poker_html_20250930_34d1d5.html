@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saturday Night Poker - 9 Players Tournament</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --dark: #1a2530;
+            --light: #ecf0f1;
+            --gray: #95a5a6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a3a, #0d1b2a);
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .countdown-timer {
+            background: var(--warning);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 1rem 0;
+        }
+        
+        /* Social Links */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-btn.telegram {
+            background: #0088cc;
+            color: white;
+        }
+        
+        .social-btn.twitter {
+            background: #1da1f2;
+            color: white;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Tournament Card */
+        .tournament-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .buyin-card {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(231, 76, 60, 0.1));
+            border: 1px solid rgba(243, 156, 18, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .buyin-amount {
+            font-size: 2.2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #f39c12, #e74c3c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0.5rem 0;
+        }
+        
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+        
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--warning);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 0.5rem;
+        }
+        
+        /* Registration Form */
+        .registration-form {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            color: var(--light);
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            background: rgba(52, 152, 219, 0.1);
+        }
+        
+        .form-text {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+        
+        .checkbox-list {
+            list-style: none;
+        }
+        
+        .checkbox-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-list input {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        
+        .btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .btn:hover {
+            background: #219653;
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Players List */
+        .players-list {
+            margin-top: 2rem;
+        }
+        
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .player-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .player-card.empty {
+            background: rgba(255, 255, 255, 0.02);
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+        }
+        
+        .player-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .player-wallet {
+            font-size: 0.8rem;
+            color: var(--gray);
+            word-break: break-all;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .notification.error {
+            background: var(--danger);
+            color: white;
+        }
+        
+        /* Time zones */
+        .time-zones {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .time-zone-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .time-zone-card.primary {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.2), rgba(155, 89, 182, 0.2));
+            border: 1px solid rgba(52, 152, 219, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🎯 SATURDAY NIGHT POKER</h1>
+            <div class="countdown-timer" id="headerCountdown">
+                Loading...
+            </div>
+            <p>1 Table • 9 Players • $25 Buy-in</p>
+            
+            <div class="social-links">
+                <a href="https://t.me/+ELUtMJT0I6owNzU0" class="social-btn telegram" target="_blank">
+                    <i class="fab fa-telegram"></i>
+                    Join Telegram
+                </a>
+                <a href="https://x.com/pumpfunpoker" class="social-btn twitter" target="_blank">
+                    <i class="fab fa-twitter"></i>
+                    Follow on X
+                </a>
+            </div>
+        </header>
+
+        <!-- Tournament Info -->
+        <div class="tournament-card">
+            <h2><i class="fas fa-calendar-alt"></i> This Saturday - 9:00 PM EST</h2>
+            
+            <div class="buyin-card">
+                <h3>Tournament Buy-in</h3>
+                <div class="buyin-amount">$25</div>
+                <p>1 table of 9 players • Freezeout format</p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="registeredCount">0</div>
+                    <div class="stat-label">Registered</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="spotsLeft">9</div>
+                    <div class="stat-label">Spots Left</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="prizePool">$0</div>
+                    <div class="stat-label">Prize Pool</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">9/9</div>
+                    <div class="stat-label">Table Size</div>
+                </div>
+            </div>
+
+            <div class="time-zones">
+                <div class="time-zone-card primary">
+                    <div>🇺🇸 EST</div>
+                    <div class="stat-value">9:00 PM</div>
+                    <div>Saturday</div>
+                </div>
+                <div class="time-zone-card">
+                    <div>🇪🇺 CET</div>
+                    <div class="stat-value">3:00 AM</div>
+                    <div>Sunday</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="registration-form">
+            <h2 style="text-align: center; margin-bottom: 1.5rem;">
+                <i class="fas fa-user-plus"></i> Register Now
+            </h2>
+            
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="playerName">Player Name *</label>
+                    <input type="text" class="form-control" id="playerName" required placeholder="Your poker username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="playerEmail">Email Address *</label>
+                    <input type="email" class="form-control" id="playerEmail" required placeholder="your.email@example.com">
+                    <div class="form-text">Tournament details will be sent here</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="playerWallet">Solana Wallet *</label>
+                    <input type="text" class="form-control" id="playerWallet" required placeholder="Your Solana wallet address">
+                    <div class="form-text">For prize distribution</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="transactionHash">Transaction Hash *</label>
+                    <input type="text" class="form-control" id="transactionHash" required placeholder="Paste Pump.fun transaction hash">
+                    <div class="form-text">From your $25 token purchase</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telegramUsername">Telegram Username</label>
+                    <input type="text" class="form-control" id="telegramUsername" placeholder="@username">
+                    <div class="form-text">Optional - for quick updates</div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-list">
+                        <li>
+                            <input type="checkbox" id="confirmPurchase" required>
+                            <label for="confirmPurchase">I purchased $25 worth of tokens on Pump.fun</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="acceptRules" required>
+                            <label for="acceptRules">I accept the tournament rules and fair play policy</label>
+                        </li>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> REGISTER FOR TOURNAMENT
+                </button>
+            </form>
+
+            <!-- Players List -->
+            <div class="players-list">
+                <h3 style="text-align: center; margin-bottom: 1rem;">
+                    <i class="fas fa-users"></i> Registered Players (9/9)
+                </h3>
+                <div class="players-grid" id="playersGrid">
+                    <!-- Players will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Configuration
+        const MAX_PLAYERS = 9;
+        const BUY_IN_AMOUNT = 25;
+
+        // Tournament date - This Saturday at 9:00 PM EST
+        const tournamentDate = new Date();
+        const daysUntilSaturday = (6 - tournamentDate.getDay() + 7) % 7 || 7;
+        tournamentDate.setDate(tournamentDate.getDate() + daysUntilSaturday);
+        tournamentDate.setHours(21, 0, 0, 0);
+        tournamentDate.setMinutes(tournamentDate.getMinutes() - tournamentDate.getTimezoneOffset() - 300);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCountdown();
+            loadRegistrations();
+            setupForm();
+            updateSubmitButton();
+        });
+
+        // Countdown timer
+        function initializeCountdown() {
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = tournamentDate.getTime() - now;
+                
+                if (distance < 0) {
+                    document.getElementById('headerCountdown').textContent = 'TOURNAMENT LIVE!';
+                    return;
+                }
+                
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                
+                if (days > 0) {
+                    document.getElementById('headerCountdown').textContent = `${days}d ${hours}h ${minutes}m`;
+                } else {
+                    document.getElementById('headerCountdown').textContent = `${hours}h ${minutes}m`;
+                }
+            }
+            
+            updateCountdown();
+            setInterval(updateCountdown, 60000);
+        }
+
+        // Form handling
+        function setupForm() {
+            document.getElementById('registrationForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                registerPlayer();
+            });
+        }
+
+        // Register player
+        function registerPlayer() {
+            const formData = {
+                name: document.getElementById('playerName').value,
+                email: document.getElementById('playerEmail').value,
+                wallet: document.getElementById('playerWallet').value,
+                transactionHash: document.getElementById('transactionHash').value,
+                telegram: document.getElementById('telegramUsername').value,
+                timestamp: new Date().toISOString()
+            };
+
+            // Validate form
+            if (!validateForm(formData)) {
+                return;
+            }
+
+            // Check if tournament is full
+            const registrations = getRegistrations();
+            if (registrations.length >= MAX_PLAYERS) {
+                showNotification('Tournament is full! Registration closed.', 'error');
+                return;
+            }
+
+            // Check if player already registered
+            if (isPlayerRegistered(formData.email, formData.wallet)) {
+                showNotification('This email or wallet is already registered!', 'error');
+                return;
+            }
+
+            // Save registration
+            saveRegistration(formData);
+            
+            // Show success message
+            showNotification('Successfully registered! Check your email for confirmation.', 'success');
+            
+            // Reset form
+            document.getElementById('registrationForm').reset();
+            
+            // Update display
+            loadRegistrations();
+            updateSubmitButton();
+        }
+
+        // Validate form
+        function validateForm(data) {
+            if (!data.name || !data.email || !data.wallet || !data.transactionHash) {
+                showNotification('Please fill in all required fields', 'error');
+                return false;
+            }
+            
+            if (!document.getElementById('confirmPurchase').checked || 
+                !document.getElementById('acceptRules').checked) {
+                showNotification('Please confirm token purchase and accept rules', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Get registrations
+        function getRegistrations() {
+            return JSON.parse(localStorage.getItem('pokerRegistrations')) || [];
+        }
+
+        // Save registration
+        function saveRegistration(data) {
+            let registrations = getRegistrations();
+            registrations.push(data);
+            localStorage.setItem('pokerRegistrations', JSON.stringify(registrations));
+        }
+
+        // Check if player is already registered
+        function isPlayerRegistered(email, wallet) {
+            const registrations = getRegistrations();
+            return registrations.some(reg => reg.email === email || reg.wallet === wallet);
+        }
+
+        // Load and display registrations
+        function loadRegistrations() {
+            const registrations = getRegistrations();
+            const registeredCount = registrations.length;
+            const spotsLeft = MAX_PLAYERS - registeredCount;
+            const prizePool = registeredCount * BUY_IN_AMOUNT * 0.9; // 10% fee
+            
+            // Update stats
+            document.getElementById('registeredCount').textContent = registeredCount;
+            document.getElementById('spotsLeft').textContent = spotsLeft;
+            document.getElementById('prizePool').textContent = '$' + prizePool.toFixed(0);
+            
+            // Update players grid
+            const playersGrid = document.getElementById('playersGrid');
+            playersGrid.innerHTML = '';
+            
+            // Add registered players
+            registrations.forEach(player => {
+                const playerCard = document.createElement('div');
+                playerCard.className = 'player-card';
+                playerCard.innerHTML = `
+                    <div class="player-name">${player.name}</div>
+                    <div class="player-wallet">${player.wallet.substring(0, 6)}...${player.wallet.substring(player.wallet.length - 4)}</div>
+                `;
+                playersGrid.appendChild(playerCard);
+            });
+            
+            // Add empty slots
+            for (let i = registeredCount; i < MAX_PLAYERS; i++) {
+                const emptyCard = document.createElement('div');
+                emptyCard.className = 'player-card empty';
+                emptyCard.innerHTML = `
+                    <div class="player-name">Empty Seat</div>
+                    <div class="player-wallet">Spot #${i + 1}</div>
+                `;
+                playersGrid.appendChild(emptyCard);
+            }
+        }
+
+        // Update submit button based on availability
+        function updateSubmitButton() {
+            const registrations = getRegistrations();
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (registrations.length >= MAX_PLAYERS) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-ban"></i> TOURNAMENT FULL';
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> REGISTER FOR TOURNAMENT';
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        // Export data (for organizer - press F12 and run this in console)
+        function exportRegistrations() {
+            const registrations = getRegistrations();
+            const csv = ['Name,Email,Wallet,Transaction Hash,Telegram,Timestamp'];
+            registrations.forEach(reg => {
+                csv.push(`"${reg.name}","${reg.email}","${reg.wallet}","${reg.transactionHash}","${reg.telegram || ''}","${reg.timestamp}"`);
+            });
+            
+            const blob = new Blob([csv.join('\n')], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'poker-registrations.csv';
+            a.click();
+        }
+
+        // Make export function available globally
+        window.exportRegistrations = exportRegistrations;
+    </script>
+</body>
+</html>
